@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forest Dashboard Realtime Test</title>
+</head>
+<body>
+  <h3>WebSocket status: Check Console</h3>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    const socket = io("http://localhost:3000");
+
+    socket.on("connect", () => {
+      console.log("✅ Connected to WebSocket:", socket.id);
+    });
+
+    socket.on("new-complaint", (data) => {
+      console.log("🚨 NEW COMPLAINT (REAL-TIME):", data);
+    });
+  </script>
+</body>
+</html>
