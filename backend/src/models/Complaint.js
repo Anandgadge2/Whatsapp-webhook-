@@ -1,26 +1,58 @@
 const mongoose = require("mongoose");
 
-const complaintSchema = new mongoose.Schema(
+const ComplaintSchema = new mongoose.Schema(
   {
-    phone: { type: String, required: true },
+    userName: {
+      type: String,
+      default: "Anonymous"
+    },
 
-    type: { type: String, required: true }, // animal, fire, cutting, general
+    phone: {
+      type: String,
+      required: true
+    },
 
-    message: { type: String },
+    type: {
+      type: String,
+      required: true
+    },
+
+    category: {
+      type: String,
+      default: "Forest"
+    },
+
+    message: {
+      type: String
+    },
 
     location: {
-      latitude: { type: Number },
-      longitude: { type: Number },
-      address: { type: String }
+      latitude: Number,
+      longitude: Number,
+      address: String
     },
-imageUrl: { type: String }
-,
+
+    imageUrl: {
+      type: String
+    },
+
+    officerName: {
+      type: String,
+      default: "Not Assigned"
+    },
+
+    officerPhone: {
+      type: String,
+      default: ""
+    },
+
     status: {
       type: String,
-      default: "pending" // pending / processing / resolved
+      enum: ["PENDING", "IN_PROGRESS", "RESOLVED"],
+      default: "PENDING"
     }
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Complaint", complaintSchema);
+module.exports = mongoose.model("Complaint", ComplaintSchema);

@@ -1,11 +1,9 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const webhookController = require('../controllers/webhookController');
 
-// Verification endpoint
-router.get('/', webhookController.verifyWebhook);
+const webhookController = require("../controllers/webhookController");
 
-// Message handling endpoint
-router.post('/', webhookController.handleIncomingMessage);
+router.get("/", webhookController.verifyWebhook);
+router.post("/", webhookController.handleIncomingMessage);
 
 module.exports = router;

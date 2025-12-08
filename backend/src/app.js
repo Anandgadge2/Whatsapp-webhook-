@@ -1,17 +1,23 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const webhookRoutes = require('./routes/webhookRoutes');
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+
+const webhookRoutes = require("./routes/webhookRoutes");
 
 const app = express();
 
-// Middleware
+app.use(cors());
 app.use(bodyParser.json());
 
-// Routes
-app.use('/webhook', webhookRoutes);
+// WHATSAPP WEBHOOK
+app.use("/webhook", webhookRoutes);
+const adminRoutes = require("./routes/adminRoutes");
 
-app.get('/', (req, res) => {
-  res.send('WhatsApp Webhook Server is running');
+app.use("/admin", adminRoutes);
+
+
+app.get("/", (req, res) => {
+  res.send("✅ Forest Department WhatsApp System is Running");
 });
 
 module.exports = app;
