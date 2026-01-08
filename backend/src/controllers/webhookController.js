@@ -2,10 +2,7 @@
 
 const axios = require("axios");
 const cloudinary = require("../config/cloudinary");
-const Incident = require("../models/Incident");
-const Officer = require("../models/Officer");
 const Notification = require("../models/Notification");
-const { assignAndNotify } = require("../services/assignmentService");
 const whatsapp = require("../services/whatsappService");
 const grievanceService = require("../services/grievanceService");
 const appointmentService = require("../services/appointmentService");
@@ -64,15 +61,6 @@ exports.receive = async (req, res) => {
           const from = m.from;
 
           /* --------------------------------------------------------------- */
-          /* OFFICER FLOW */
-          /* --------------------------------------------------------------- */
-          const officer = await Officer.findOne({ whatsappNumber: from });
-          if (officer && m.type === "text") {
-            await handleOfficerReply(officer, m.text.body.trim());
-            continue;
-          }
-
-          /* --------------------------------------------------------------- */
           /* BUTTON REPLY HANDLING (Interactive Messages) - G2C FEATURES */
           /* --------------------------------------------------------------- */
           if (m.type === "interactive") {
@@ -95,42 +83,37 @@ exports.receive = async (req, res) => {
 
             const lang = getUserLanguage(from);
 
-
             // Appointment confirmation buttons
-if (
-  userSessions[from] &&
-  userSessions[from].flow === "APPOINTMENT" &&
-  userSessions[from].stage === "CONFIRM"
-) {
-  const lang = getUserLanguage(from);
+            if (
+              userSessions[from] &&
+              userSessions[from].flow === "APPOINTMENT" &&
+              userSessions[from].stage === "CONFIRM"
+            ) {
+              const lang = getUserLanguage(from);
 
-  if (
-    button === "✅ Confirm" ||
-    button === "✅ पुष्टी करा"
-  ) {
-    await appointmentService.createAppointment({
-      userName: userSessions[from].userName,
-      phone: from,
-      department: userSessions[from].department,
-      purpose: userSessions[from].purpose,
-      preferredDate: userSessions[from].preferredDate,
-      preferredTime: userSessions[from].preferredTime,
-    });
+              if (button === "✅ Confirm" || button === "✅ पुष्टी करा") {
+                await appointmentService.createAppointment({
+                  userName: userSessions[from].userName,
+                  phone: from,
+                  department: userSessions[from].department,
+                  purpose: userSessions[from].purpose,
+                  preferredDate: userSessions[from].preferredDate,
+                  preferredTime: userSessions[from].preferredTime,
+                });
 
-    delete userSessions[from];
-    continue;
-  }
+                delete userSessions[from];
+                continue;
+              }
 
-  if (
-    button === "❌ Cancel" ||
-    button === "❌ रद्द करा"
-  ) {
-    delete userSessions[from];
-    await whatsapp.sendText(from, getText(lang, "bookingCancelled"));
-    continue;
-  }
-}
-
+              if (button === "❌ Cancel" || button === "❌ रद्द करा") {
+                delete userSessions[from];
+                await whatsapp.sendText(
+                  from,
+                  getText(lang, "bookingCancelled")
+                );
+                continue;
+              }
+            }
 
             // Main Menu Options - English
             if (
@@ -742,50 +725,3 @@ if (
     return res.sendStatus(200);
   }
 };
-
-/* ---------------------------------------------------------------------- */
-/* OFFICER HANDLING LOGIC */
-/* ---------------------------------------------------------------------- */
-async function handleOfficerReply(officer, reply) {
-  try {
-    reply = reply.trim();
-
-    const incident = await Incident.findOne({
-      assignedOfficers: officer._id,
-      status: { $in: ["pending", "accepted", "in_progress"] },
-    }).sort({ createdAt: -1 });
-
-    if (!incident) {
-      await whatsapp.sendText(officer.whatsappNumber, "No incident found.");
-      return;
-    }
-
-    let statusMap = {
-      1: "accepted",
-      2: "declined",
-      3: "completed",
-      4: "in_progress",
-    };
-
-    const newStatus = statusMap[reply];
-    if (!newStatus) {
-      await whatsapp.sendText(
-        officer.whatsappNumber,
-        "Use:\n1 Accept\n2 Decline\n3 Complete\n4 In Progress"
-      );
-      return;
-    }
-
-    incident.status = newStatus;
-    await incident.save();
-
-    await Notification.updateMany(
-      { incidentId: incident._id, userId: officer._id },
-      { status: newStatus }
-    );
-
-    await whatsapp.sendText(officer.whatsappNumber, `Updated: ${newStatus}`);
-  } catch (err) {
-    console.error("Officer update error:", err);
-  }
-}
