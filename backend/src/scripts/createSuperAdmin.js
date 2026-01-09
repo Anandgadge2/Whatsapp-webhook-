@@ -2,7 +2,7 @@
  * Script to create initial SUPER ADMIN
  * Run using: node src/scripts/createSuperAdmin.js
  */
-
+require("dns").setDefaultResultOrder("ipv4first");
 require("dotenv").config({ path: __dirname + "/../../.env" });
 
 const mongoose = require("mongoose");
