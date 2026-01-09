@@ -4,17 +4,39 @@ A Node.js-based WhatsApp automation backend powered by the WhatsApp Cloud API. T
 
 ---
 
+## 📚 Documentation
+
+### Getting Started
+
+- **[System Overview](./SYSTEM_OVERVIEW.md)** - Complete system architecture and real-life use cases
+- **[Quick Start Guide](./QUICK_START.md)** - Get started in 15 minutes
+
+### Deployment & Production
+
+- **[Deployment Guide](./DEPLOYMENT_GUIDE.md)** - Deploy to Heroku, Railway, Render, VPS, or Docker
+- **[Production Checklist](./PRODUCTION_CHECKLIST.md)** - Pre-deployment checklist for production readiness
+
+### API & Integration
+
+- **[Meta API Guide](./META_API_GUIDE.md)** - Complete WhatsApp Business API reference with examples
+
+### Configuration
+
+- **[Environment Variables](./.env.example)** - Template for all environment variables
+
+---
+
 ## 🚀 Features
 
-* WhatsApp Cloud API integration
-* Secure webhook verification
-* Interactive message-based automation
-* Image handling and Cloudinary integration
-* Live location capture (latitude & longitude)
-* MongoDB data storage
-* Real-time updates using Socket.IO
-* Scalable & modular Node.js architecture
-* Production-ready error handling
+- WhatsApp Cloud API integration
+- Secure webhook verification
+- Interactive message-based automation
+- Image handling and Cloudinary integration
+- Live location capture (latitude & longitude)
+- MongoDB data storage
+- Real-time updates using Socket.IO
+- Scalable & modular Node.js architecture
+- Production-ready error handling
 
 ---
 
@@ -22,29 +44,29 @@ A Node.js-based WhatsApp automation backend powered by the WhatsApp Cloud API. T
 
 **Backend**
 
-* Node.js
-* Express.js
+- Node.js
+- Express.js
 
 **Database**
 
-* MongoDB + Mongoose
+- MongoDB + Mongoose
 
 **Media Storage**
 
-* Cloudinary
+- Cloudinary
 
 **APIs**
 
-* WhatsApp Cloud API (Meta Graph API)
+- WhatsApp Cloud API (Meta Graph API)
 
 **Realtime**
 
-* Socket.IO / WebSockets
+- Socket.IO / WebSockets
 
 **Development Tools**
 
-* Nodemon
-* Ngrok (for local webhook testing)
+- Nodemon
+- Ngrok (for local webhook testing)
 
 ---
 
@@ -158,9 +180,10 @@ https://YOUR-NGROK-URL/webhook
 2. WhatsApp triggers webhook
 3. Server receives data:
 
-   * Text
-   * Location
-   * Image
+   - Text
+   - Location
+   - Image
+
 4. Media is fetched using Meta token
 5. Image is uploaded to Cloudinary
 6. Data is stored in MongoDB
@@ -195,17 +218,17 @@ Use this HTML file to test Socket.IO:
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-  <title>WebSocket Test</title>
-</head>
-<body>
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-  <script>
-    const socket = io("http://localhost:3000");
-    socket.on("connect", () => console.log("Connected:", socket.id));
-    socket.on("new-complaint", data => console.log("New data:", data));
-  </script>
-</body>
+  <head>
+    <title>WebSocket Test</title>
+  </head>
+  <body>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+      const socket = io("http://localhost:3000");
+      socket.on("connect", () => console.log("Connected:", socket.id));
+      socket.on("new-complaint", (data) => console.log("New data:", data));
+    </script>
+  </body>
 </html>
 ```
 
@@ -213,32 +236,31 @@ Use this HTML file to test Socket.IO:
 
 ## ✅ What Makes This System Strong
 
-* Secure token validation
-* Scalable architecture
-* Structured data storage
-* Real-time communication
-* Cloud-based image storage
-* Works with any frontend
-* Built for real-world usage
+- Secure token validation
+- Scalable architecture
+- Structured data storage
+- Real-time communication
+- Cloud-based image storage
+- Works with any frontend
+- Built for real-world usage
 
 ---
 
 ## 🔐 Security Notes
 
-* Never expose your `.env`
-* Always regenerate tokens if leaked
-* Add rate limiting in production
-* Use HTTPS in production
-* Add auth layer for admin panel
+- Never expose your `.env`
+- Always regenerate tokens if leaked
+- Add rate limiting in production
+- Use HTTPS in production
+- Add auth layer for admin panel
 
 ---
 
 ## 📌 Future Enhancements
 
-* Web dashboard (React / Next.js)
-* Role-based admin system
-* Google Maps integration
-* Case assignment system
-* Analytics & reporting
-* Auto classification (AI)
-
+- Web dashboard (React / Next.js)
+- Role-based admin system
+- Google Maps integration
+- Case assignment system
+- Analytics & reporting
+- Auto classification (AI)
